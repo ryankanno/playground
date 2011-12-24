@@ -21,16 +21,16 @@ LOG_LEVEL = logging.DEBUG
 def timing(func):
     def wrapper(*args, **kwargs):
         start  = time.clock() if 'Windows' == platform.system() else time.time()
-        retval = func(*args, **kwargs)
+        result = func(*args, **kwargs)
         end    = time.clock() if 'Windows' == platform.system() else time.time()
         print "%s took %0.3f ms" % (func.func_name, (end-start) * 1000.0)
-        return retval
+        return result
     return wrapper
 
 
 def init_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--run-tests', action='store_true', help='run all tests')
+    parser.add_argument('--run-tests', '-t', action='store_true', help='run all tests')
     return parser
 
 
@@ -48,11 +48,12 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     try:
-        do_work_son(args)
-    except KeyboardInterrupt, e: 
-    except SystemExit, e: 
-    except Exception, e:
-        os._exit(1)
+        if args.run_tests:
+            _test()
+        else:
+            do_work_son(args)
+    except Exception as e:
+        sys.exit(1)
 
     # Yayyy-yah
     return 0
