@@ -6,6 +6,7 @@ import platform
 import logging
 import sys
 import os
+import time
 
 """ This module is just a template I use before performing magic """
 
@@ -13,8 +14,10 @@ __all__     = ['main']
 __author__  = ""
 __url__     = ""
 __version__ = ""
+__license__ = ""
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL  = logging.DEBUG
+LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
 
 
 # Timing decorator
@@ -23,23 +26,24 @@ def timing(func):
         start  = time.clock() if 'Windows' == platform.system() else time.time()
         result = func(*args, **kwargs)
         end    = time.clock() if 'Windows' == platform.system() else time.time()
-        print "%s took %0.3f ms" % (func.func_name, (end-start) * 1000.0)
+        logging.info("{0} took {1:.3g} ms".format(func.func_name, (end-start) * 1000.0))
         return result
     return wrapper
 
 
 def init_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--run-tests', '-t', action='store_true', help='run all tests')
+    parser.add_argument('-t', '--run-tests', action='store_true', help='run all tests')
     return parser
 
 
+@timing
 def do_work_son(args):
     pass
 
 
 def main(argv=None):
-    logging.basicConfig(level=LOG_LEVEL, format='%(asctime)s %(levelname)s %(message)s')
+    logging.basicConfig(level=LOG_LEVEL, format=LOG_FORMAT)
 
     if argv is None:
         argv = sys.argv
@@ -53,6 +57,7 @@ def main(argv=None):
         else:
             do_work_son(args)
     except Exception as e:
+        logging.error("OMGWTFBBQ: {0}".format(e.args))
         sys.exit(1)
 
     # Yayyy-yah
@@ -60,6 +65,7 @@ def main(argv=None):
 
 
 def _test():
+    """ Do some testing, yo """
     import doctest
     doctest.testmod(sys.modules[__name__])
 
