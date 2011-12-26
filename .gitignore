@@ -6,3 +6,7 @@ priv
 *.o
 *.beam
 *.plt
+
+# Python
+*.pyc
+twitter.config.json
