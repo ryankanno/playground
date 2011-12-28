@@ -55,7 +55,8 @@ def get_friends(config_fname, screen_name=None, cursor=None):
             friends = api.getFriendsIDs(cursor=cursor)
 
     if friends and friends['next_cursor_str'] != unicode('0'):
-        return friends['ids'] + get_friends(config_fname, screen_name, friends['next_cursor_str'])
+        return friends['ids'] + get_friends(config_fname, screen_name, 
+            friends['next_cursor_str'])
     elif friends:
         return friends['ids'] 
     else:
@@ -79,12 +80,14 @@ def get_followers(config_fname, screen_name=None, cursor=None):
             followers = api.getFollowersIDs()
     else:
         if screen_name:
-            followers = api.getFollowersIDs(screen_name=screen_name, cursor=cursor)
+            followers = api.getFollowersIDs(screen_name=screen_name, 
+                cursor=cursor)
         else:
             followers = api.getFollowersIDs(cursor=cursor)
 
     if followers and followers['next_cursor_str'] != unicode('0'):
-        return followers['ids'] + get_followers(config_fname, screen_name, followers['next_cursor_str'])
+        return followers['ids'] + get_followers(config_fname, screen_name, 
+            followers['next_cursor_str'])
     elif followers:
         return followers['ids'] 
     else:
@@ -95,3 +98,10 @@ def followers_incommon(config_fname, screen_name):
     my_followers = get_followers(config_fname)
     other_followers = get_followers(config_fname, screen_name)
     return [x for x in my_followers if x in other_followers]
+
+
+def get_unfollowers(config_fname, screen_name=None):
+    friends = get_friends(config_fname, screen_name)
+    followers = get_followers(config_fname, screen_name)
+    return [x for x in friends if x not in followers]
+
