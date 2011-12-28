@@ -7,12 +7,12 @@ import logging
 import argparse
 import os
 
-from utilities import doifollow
+from utilities import followers_incommon
 
 """
-Function determines if you follow other account.  Please make sure to 
-have a configuration file named twitter.config.json that contains the 
-appropriate OAuth tokens.
+Function determine the accounts that you and other account have in common.  
+Please make sure to have a configuration file named twitter.config.json that 
+contains the appropriate OAuth tokens.
 """
 
 LOG_LEVEL  = logging.DEBUG
@@ -38,10 +38,8 @@ def main(argv=None):
 
     try:
         config_fname = args.config if args.config else DEFAULT_TWITTER_CONFIG_FNAME
-        if doifollow(config_fname, args.screen_name):
-            print("You are following {0}".format(args.screen_name))
-        else:
-            print("You are not following {0}".format(args.screen_name))
+        incommon = followers_incommon(config_fname, args.screen_name)
+        print("You have {0} followers in common with {1}".format(len(incommon), args.screen_name))
     except Exception as e:
         logging.error("OMGWTFBBQ: {0}".format(e.args))
         sys.exit(1)

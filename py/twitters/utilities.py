@@ -17,11 +17,81 @@ def get_twitter_client(config=None):
         return Twython()
 
 
-def doifollow(config_fname, screen_name):
+def get_relationship(config_fname, screen_name):
     config = get_config(config_fname)
     api    = get_twitter_client(config)
-    rel    = api.showFriendship(target_screen_name=screen_name)
+    return api.showFriendship(target_screen_name=screen_name)
+
+
+def doifollow(config_fname, screen_name):
+    rel = get_relationship(config_fname, screen_name)
     try:
         return rel['relationship']['source']['following']
     except:
         return False
+
+
+def followsme(config_fname, screen_name):
+    rel = get_relationship(config_fname, screen_name)
+    try:
+        return rel['relationship']['source']['followed_by']
+    except:
+        return false
+
+
+def get_friends(config_fname, screen_name=None, cursor=None):
+    config = get_config(config_fname)
+    api    = get_twitter_client(config)
+
+    if cursor is None or cursor == unicode('0'):
+        if screen_name:
+            friends = api.getFriendsIDs(screen_name=screen_name)
+        else:
+            friends = api.getFriendsIDs()
+    else:
+        if screen_name:
+            friends = api.getFriendsIDs(screen_name=screen_name, cursor=cursor)
+        else:
+            friends = api.getFriendsIDs(cursor=cursor)
+
+    if friends and friends['next_cursor_str'] != unicode('0'):
+        return friends['ids'] + get_friends(config_fname, screen_name, friends['next_cursor_str'])
+    elif friends:
+        return friends['ids'] 
+    else:
+        return []
+
+
+def friends_incommon(config_fname, screen_name):
+    my_friends = friends(config_fname)
+    other_friends = friends(config_fname, screen_name)
+    return [x for x in my_friends if x in other_friends]
+
+
+def get_followers(config_fname, screen_name=None, cursor=None):
+    config = get_config(config_fname)
+    api    = get_twitter_client(config)
+
+    if cursor is None or cursor == unicode('0'):
+        if screen_name:
+            followers = api.getFollowersIDs(screen_name=screen_name)
+        else:
+            followers = api.getFollowersIDs()
+    else:
+        if screen_name:
+            followers = api.getFollowersIDs(screen_name=screen_name, cursor=cursor)
+        else:
+            followers = api.getFollowersIDs(cursor=cursor)
+
+    if followers and followers['next_cursor_str'] != unicode('0'):
+        return followers['ids'] + get_followers(config_fname, screen_name, followers['next_cursor_str'])
+    elif followers:
+        return followers['ids'] 
+    else:
+        return []
+
+
+def followers_incommon(config_fname, screen_name):
+    my_followers = followers(config_fname)
+    other_followers = followers(config_fname, screen_name)
+    return [x for x in my_followers if x in other_followers]
