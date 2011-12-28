@@ -7,10 +7,10 @@ import logging
 import argparse
 import os
 
-from utilities import followers_incommon
+from utilities import friends_incommon
 
 """
-Function determine the accounts that you and other account have in common.  
+Function determine the friends that you and other account have in common.  
 Please make sure to have a configuration file named twitter.config.json that 
 contains the appropriate OAuth tokens.
 """
@@ -38,8 +38,8 @@ def main(argv=None):
 
     try:
         config_fname = args.config if args.config else DEFAULT_TWITTER_CONFIG_FNAME
-        incommon = followers_incommon(config_fname, args.screen_name)
-        print("You have {0} followers in common with {1}".format(len(incommon), args.screen_name))
+        incommon = friends_incommon(config_fname, args.screen_name)
+        print("You have {0} friends in common with {1}".format(len(incommon), args.screen_name))
     except Exception as e:
         logging.error("OMGWTFBBQ: {0}".format(e.args))
         sys.exit(1)
