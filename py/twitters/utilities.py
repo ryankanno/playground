@@ -63,8 +63,8 @@ def get_friends(config_fname, screen_name=None, cursor=None):
 
 
 def friends_incommon(config_fname, screen_name):
-    my_friends = friends(config_fname)
-    other_friends = friends(config_fname, screen_name)
+    my_friends = get_friends(config_fname)
+    other_friends = get_friends(config_fname, screen_name)
     return [x for x in my_friends if x in other_friends]
 
 
@@ -92,6 +92,6 @@ def get_followers(config_fname, screen_name=None, cursor=None):
 
 
 def followers_incommon(config_fname, screen_name):
-    my_followers = followers(config_fname)
-    other_followers = followers(config_fname, screen_name)
+    my_followers = get_followers(config_fname)
+    other_followers = get_followers(config_fname, screen_name)
     return [x for x in my_followers if x in other_followers]
