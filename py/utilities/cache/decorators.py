@@ -1,8 +1,6 @@
-import os
-import logging
 import inspect
+import logging
 
-from types import FunctionType
 from functools import wraps
 from dogpile import cache_get, cache_set
 
@@ -17,7 +15,7 @@ def default_key_fun_impl(fun, *args, **kwargs):
         for k in sorted(call_args.iterkeys())]))
 
 
-def cacheable(cache, key=None, ttl=60, is_enabled=True):
+def cacheable(cache, key=None, ttl=60, enabled=True):
     """
     Decorator for cacheable function
     """
@@ -29,7 +27,7 @@ def cacheable(cache, key=None, ttl=60, is_enabled=True):
                 lambda fxn, *args, **kwargs: key
         @wraps(fxn)
         def wrapper(*args, **kwargs):
-            if is_enabled:
+            if enabled:
                 key  = key_fun(fxn, *args, **kwargs)
                 data = cache_get(cache, key)
                 if data is None:
