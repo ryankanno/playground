@@ -1,0 +1,122 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="fancy-options/lib/store.js"></script>
+    <script type="text/javascript">
+        google.load("jquery", "1.7.1");
+
+        // TODO: Read from configuration variable in fancy-css
+        var www_selector = 
+        {
+            'news.ycombinator.com': 'td.title > a',
+            'reddit.com': 'a.title'
+        };
+
+        // TODO: From the looks of it, looks like we need to manage tabId to 
+        //       see if a menu is loaded
+        
+        var context_menu_manager = {};
+
+        function has_context_menu(tab)
+        {
+            return (tab.id in context_menu_manager);
+        };
+
+        function needs_context_menu(tab)
+        {
+            for (var key in www_selector)
+            {
+                if (tab.url && tab.url.indexOf(key) != -1) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        function remove_context_menu(tab)
+        {
+            if (has_context_menu(tab))
+            {
+                chrome.contextMenus.removeAll(function() {});
+                delete context_menu_manager[tab.id];
+            }
+        };
+
+        function create_context_menu(tab)
+        {
+            var all_links_id = chrome.contextMenus.create({"title": "All links in new tabs",
+                "contexts":["page"],
+                "onclick":open_in_tabs('all')});
+
+            var unread_links_id = chrome.contextMenus.create({"title": "Unread links in new tabs",
+                "contexts":["page"],
+                "onclick":open_in_tabs('unread')});
+
+            context_menu_manager[tab.id] = [all_links_id, unread_links_id];
+        };
+
+        function open_in_tab(url) {
+            chrome.tabs.create({'url': url}, function(tab) {});
+        };
+
+        function get_selectors(tab)
+        {
+            var selectors = [];
+            for (var key in www_selector)
+            {
+                if (tab.url && tab.url.indexOf(key) != -1) 
+                {
+                    selectors.push(www_selector[key]);
+                }
+            }
+            return selectors;
+        };
+
+        function _handle_urls(response)
+        {
+            if ('urls' in response)
+            {
+                for (var i = 0; i < response.urls.length; i++)
+                {
+                    open_in_tab(response.urls[i]);
+                }
+            }
+        };
+
+        function open_in_tabs(state)
+        {
+            return function(info, tab) {
+                var msg = {};
+                msg[state] = get_selectors(tab);
+                chrome.tabs.sendRequest(tab.id, msg, _handle_urls);
+            };
+        };
+
+        chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+            if (changeInfo.status == 'complete')
+            {
+                if (needs_context_menu(tab))
+                {
+                    console.log("Tab needs context menu");
+                    if (!has_context_menu(tab))
+                        console.log("Creating context menu");
+                        create_context_menu(tab);
+                }
+                else
+                {
+                    console.log("Tab does not need context menu");
+                    if (has_context_menu(tab))
+                        console.log("Removing context menu");
+                        remove_context_menu(tab);
+                }
+            }
+        });
+
+        chrome.tabs.onActiveChanged.addListener(function(tabId, selectInfo) {
+            var tab = chrome.tabs.get(tabId);
+        });
+    </script>
+</head>
+<body>
+</body>
+</html>

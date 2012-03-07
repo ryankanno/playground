@@ -1,0 +1,20 @@
+{
+  "name": "My First Extension",
+  "name": "Open Sesame",
+  "version": "0.0.1",
+  "description": "Opening all links defined by a css selector in a new tab.
+                  Very useful for sites like HN, Reddit, etc.",
+  "options_page": "fancy-options/index.html",
+  "background_page": "background.html",
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "http://ajax.googleapis.com/"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*"],
+      "js": ["jquery.min.js", "content_script.js"]
+    }
+  ]
+}
