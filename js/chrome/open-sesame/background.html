@@ -19,7 +19,7 @@
 
         function has_context_menu(tab)
         {
-            return (tab.id in context_menu_manager);
+            return (tab.url in context_menu_manager);
         };
 
         function needs_context_menu(tab)
@@ -52,7 +52,7 @@
                 "contexts":["page"],
                 "onclick":open_in_tabs('unread')});
 
-            context_menu_manager[tab.id] = [all_links_id, unread_links_id];
+            context_menu_manager[tab.url] = [all_links_id, unread_links_id];
         };
 
         function open_in_tab(url) {
