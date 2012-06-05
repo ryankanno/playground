@@ -25,7 +25,7 @@ def twilio(fxn):
         signature = request.META.get('HTTP_X_TWILIO_SIGNATURE', '')
         validator = RequestValidator(TWILIO_AUTH_TOKEN)
 
-        if v.validate(url, request.POST, sig):
+        if v.validate(url, request.POST, signature):
             return fxn(request, *args, **kwargs)
         else:
             return HttpResponseBadRequest('Unable to validate Twilio signature')
