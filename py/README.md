@@ -11,12 +11,6 @@ Twitters
 Collection of Twitter scripts to collect various stats about yourself.
 
 
-Django
-========
-
-Lots of little goodies I've written for use in http://allb.us
-
-
 Google
 ========
 
@@ -28,7 +22,8 @@ all your Google Docs.
 Web2Email
 ========
 
-A small script I wrote long ago to email web pages via cron.
+A small script I wrote long ago to email web pages via cron.  Works, but
+probably terrible.
 
 
 Disclaimer
