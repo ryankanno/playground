@@ -10,19 +10,20 @@ import os
 from utilities import followsme
 
 """
-Function determines if you other account follows you.  Please make sure to 
-have a configuration file named twitter.config.json that contains the 
+Function determines if you other account follows you.  Please make sure to
+have a configuration file named twitter.config.json that contains the
 appropriate OAuth tokens.
 """
 
-LOG_LEVEL  = logging.DEBUG
+LOG_LEVEL = logging.DEBUG
 LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
-DEFAULT_TWITTER_CONFIG_FNAME=os.path.join(os.getcwd(), 'twitter.config.json')
+DEFAULT_TWITTER_CONFIG_FNAME = os.path.join(os.getcwd(), 'twitter.config.json')
 
 
 def init_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('screen_name', help='does this screen name follow you?')
+    parser.add_argument('screen_name',
+                        help='does this screen name follow you?')
     parser.add_argument('-c', '--config', help='configuration file')
     return parser
 
@@ -37,7 +38,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     try:
-        config_fname = args.config if args.config else DEFAULT_TWITTER_CONFIG_FNAME
+        config_fname = args.config if args.config \
+            else DEFAULT_TWITTER_CONFIG_FNAME
         if followsme(config_fname, args.screen_name):
             print("{0} is following you".format(args.screen_name))
         else:

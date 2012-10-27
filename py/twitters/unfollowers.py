@@ -10,14 +10,14 @@ import os
 from utilities import get_unfollowers
 
 """
-Function determines all people you follow who do not follow you back.  Please 
-make sure to have a configuration file named twitter.config.json that contains 
+Function determines all people you follow who do not follow you back.  Please
+make sure to have a configuration file named twitter.config.json that contains
 the appropriate OAuth tokens.
 """
 
-LOG_LEVEL  = logging.DEBUG
+LOG_LEVEL = logging.DEBUG
 LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
-DEFAULT_TWITTER_CONFIG_FNAME=os.path.join(os.getcwd(), 'twitter.config.json')
+DEFAULT_TWITTER_CONFIG_FNAME = os.path.join(os.getcwd(), 'twitter.config.json')
 
 
 def init_argparser():
@@ -37,9 +37,11 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     try:
-        config_fname = args.config if args.config else DEFAULT_TWITTER_CONFIG_FNAME
+        config_fname = args.config if args.config \
+            else DEFAULT_TWITTER_CONFIG_FNAME
         unfollowers = get_unfollowers(config_fname, args.screen_name)
-        print("There are {0} people you follow who do not follow you back".format(len(unfollowers)))
+        print("There are {0} people you follow who do not follow you back"
+              .format(len(unfollowers)))
     except Exception as e:
         logging.error("OMGWTFBBQ: {0}".format(e.args))
         sys.exit(1)

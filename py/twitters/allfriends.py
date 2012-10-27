@@ -11,14 +11,14 @@ from utilities import get_friends
 
 """
 Function determines all friend ids for an account.  Need to watch out who you
-are requesting, this could put you over the ratelimit.  Please make sure to 
-have a configuration file named twitter.config.json that contains the 
+are requesting, this could put you over the ratelimit.  Please make sure to
+have a configuration file named twitter.config.json that contains the
 appropriate OAuth tokens.
 """
 
-LOG_LEVEL  = logging.DEBUG
+LOG_LEVEL = logging.DEBUG
 LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
-DEFAULT_TWITTER_CONFIG_FNAME=os.path.join(os.getcwd(), 'twitter.config.json')
+DEFAULT_TWITTER_CONFIG_FNAME = os.path.join(os.getcwd(), 'twitter.config.json')
 
 
 def init_argparser():
@@ -38,7 +38,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
 
     try:
-        config_fname = args.config if args.config else DEFAULT_TWITTER_CONFIG_FNAME
+        config_fname = args.config if args.config \
+            else DEFAULT_TWITTER_CONFIG_FNAME
         friends = get_friends(config_fname, args.screen_name)
         print("{0} has {1} friends".format(args.screen_name, len(friends)))
     except Exception as e:

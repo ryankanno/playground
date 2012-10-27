@@ -14,9 +14,9 @@ import mechanize
 
 """ This module is just a template I use before performing crawling magic """
 
-__all__     = ['main']
-__author__  = ""
-__url__     = ""
+__all__ = ['main']
+__author__ = ""
+__url__ = ""
 __version__ = ""
 __license__ = ""
 
@@ -27,10 +27,12 @@ LOG_FORMAT = '%(asctime)s %(levelname)s %(message)s'
 # Timing decorator
 def timing(func):
     def wrapper(*args, **kwargs):
-        start  = time.clock() if 'Windows' == platform.system() else time.time()
+        start = time.clock() if 'Windows' == platform.system() \
+            else time.time()
         result = func(*args, **kwargs)
-        end    = time.clock() if 'Windows' == platform.system() else time.time()
-        logging.info("{0} took {1:.3g} ms".format(func.func_name, (end-start) * 1000.0))
+        end = time.clock() if 'Windows' == platform.system() else time.time()
+        logging.info("{0} took {1:.3g} ms".format(func.func_name,
+                    (end - start) * 1000.0))
         return result
     return wrapper
 
@@ -38,8 +40,10 @@ def timing(func):
 def init_argparser():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('url', help='url to crawl')
-    parser.add_argument('-d', '--directory', default=os.getcwd(), help='directory to store crawl')
-    parser.add_argument('-t', '--run-tests', action='store_true', help='run all tests')
+    parser.add_argument('-d', '--directory', default=os.getcwd(),
+                        help='directory to store crawl')
+    parser.add_argument('-t', '--run-tests', action='store_true',
+                        help='run all tests')
     return parser
 
 
@@ -63,7 +67,7 @@ def save_crawl(path_to_file, response):
     logging.debug("Saving to: {0}".format(path_to_file))
 
     dirname = os.path.dirname(path_to_file)
-    
+
     if not os.path.exists(dirname):
         os.makedirs(dirname)
 
