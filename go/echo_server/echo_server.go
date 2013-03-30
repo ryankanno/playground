@@ -8,6 +8,7 @@ import (
 const listenAddress = ":6969"
 
 func HandleConnection(conn net.Conn) {
+    defer conn.Close()
 	buffer := make([]byte, 4096)
 	for {
 		n, err := conn.Read(buffer)
@@ -32,7 +33,6 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			} else {
-				defer conn.Close()
 				go HandleConnection(conn)
 			}
 		}
