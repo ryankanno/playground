@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"log"
 	"net"
 )
@@ -26,6 +27,7 @@ func main() {
 	listener, err := net.Listen("tcp", listenAddress)
 	if err != nil {
 		log.Fatal(err)
+        os.Exit(1)
 	} else {
 		defer listener.Close()
 		for {
